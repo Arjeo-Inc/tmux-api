@@ -8,10 +8,11 @@ app = Flask(__name__)
 def root():
     return "Flask application is running!"
 
-@app.route('/openai', methods=['POST'])
+@app.route('/v1/chat/completions', methods=['POST'])
 def openai_command():
     data = request.json
-    command_str = data.get('content')
+    messages = data.get('messages')
+    command_str = [msg['content'] for msg in messages if msg['role'] == 'user'][0]
     if not command_str:
         return jsonify({'error': 'No command specified'}), 400
 
@@ -29,9 +30,9 @@ def openai_command():
             # Execute the tmux command and get output
             # Now passing a list to subprocess.check_output to handle commands with flags/arguments
             output = subprocess.check_output(command_list, stderr=subprocess.STDOUT)
-            yield 'data: {}\n\n'.format(output.decode('utf-8'))
+            yield 'data: {"id": "any_id", "object": "text.completion", "created": 0, "model": "gpt-3.5-turbo", "choices": [{"text": "' + output.decode('utf-8') + '", "finish_reason": "stop", "index": 0}]}\n\n'
         except subprocess.CalledProcessError as e:
-            yield 'data: {"error": "Command failed", "details": "' + e.output.decode('utf-8') + '"}\n\n'
+            yield 'data: {"id": "any_id", "object": "text.completion", "created": 0, "model": "gpt-3.5-turbo", "choices": [{"text": "Command failed: ' + e.output.decode('utf-8') + '", "finish_reason": "stop", "index": 0}]}\n\n'
     return app.response_class(generate(), mimetype='text/event-stream')
 
 if __name__ == '__main__':
