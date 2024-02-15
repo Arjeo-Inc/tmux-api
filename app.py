@@ -52,11 +52,11 @@ def openai_command():
         return response
 
     def generate():
+        import json
         try:
             # Execute the tmux command and get output
             # Now passing a list to subprocess.check_output to handle commands with flags/arguments
             output = subprocess.check_output(command_list, stderr=subprocess.STDOUT)
-            import json
             yield 'data: {"id": "any_id", "object": "text.completion", "created": 0, "model": "gpt-3.5-turbo", "choices": [{"text": ' + json.dumps(output.decode('utf-8')) + ', "finish_reason": "stop", "index": 0}]}\n\n'
         except subprocess.CalledProcessError as e:
             yield 'data: {"id": "any_id", "object": "text.completion", "created": 0, "model": "gpt-3.5-turbo", "choices": [{"text": "Command failed: ' + json.dumps(e.output.decode('utf-8')) + '", "finish_reason": "stop", "index": 0}]}\n\n'
