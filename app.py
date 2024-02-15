@@ -4,6 +4,10 @@ import shlex  # Importing shlex to safely split the command string into a list
 
 app = Flask(__name__)
 
+@app.route('/')
+def root():
+    return "Flask application is running!"
+
 @app.route('/openai', methods=['POST'])
 def openai_command():
     data = request.json
