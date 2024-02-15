@@ -54,12 +54,10 @@ def openai_command():
     def generate():
         import json
         try:
-            # Execute the tmux command and get output
-            # Now passing a list to subprocess.check_output to handle commands with flags/arguments
             output = subprocess.check_output(command_list, stderr=subprocess.STDOUT)
-            yield 'data: {"id": "any_id", "object": "text.completion", "created": 0, "model": "gpt-3.5-turbo", "choices": [{"text": ' + json.dumps(output.decode('utf-8')) + ', "finish_reason": "stop", "index": 0}]}\n\n'
+            yield json.dumps({"id": "chatcmpl-123", "object": "chat.completion.chunk", "created": 1694268190, "model": "gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices": [{"index": 0, "delta": {"role": "assistant", "content": output.decode('utf-8')}, "logprobs": None, "finish_reason": None}]})
         except subprocess.CalledProcessError as e:
-            yield 'data: {"id": "any_id", "object": "text.completion", "created": 0, "model": "gpt-3.5-turbo", "choices": [{"text": "Command failed: ' + json.dumps(e.output.decode('utf-8')) + '", "finish_reason": "stop", "index": 0}]}\n\n'
+            yield json.dumps({"id": "chatcmpl-123", "object": "chat.completion.chunk", "created": 1694268190, "model": "gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices": [{"index": 0, "delta": {"role": "assistant", "content": "Command failed: " + e.output.decode('utf-8')}, "logprobs": None, "finish_reason": None}]})
     response = app.response_class(generate(), mimetype='text/event-stream')
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
