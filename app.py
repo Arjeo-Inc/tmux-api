@@ -55,9 +55,9 @@ def openai_command():
         import json
         try:
             output = subprocess.check_output(command_list, stderr=subprocess.STDOUT)
-            yield json.dumps({"id": "chatcmpl-123", "object": "chat.completion.chunk", "created": 1694268190, "model": "gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices": [{"index": 0, "delta": {"role": "assistant", "content": output.decode('utf-8')}, "logprobs": None, "finish_reason": None}]})
+            yield 'data: %s\n\n' % json.dumps({"id": "chatcmpl-123", "object": "chat.completion.chunk", "created": 1694268190, "model": "gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices": [{"index": 0, "delta": {"role": "assistant", "content": output.decode('utf-8')}, "logprobs": None, "finish_reason": None}]})
         except subprocess.CalledProcessError as e:
-            yield json.dumps({"id": "chatcmpl-123", "object": "chat.completion.chunk", "created": 1694268190, "model": "gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices": [{"index": 0, "delta": {"role": "assistant", "content": "Command failed: " + e.output.decode('utf-8')}, "logprobs": None, "finish_reason": None}]})
+            yield 'data: %s\n\n' % json.dumps({"id": "chatcmpl-123", "object": "chat.completion.chunk", "created": 1694268190, "model": "gpt-3.5-turbo-0613", "system_fingerprint": "fp_44709d6fcb", "choices": [{"index": 0, "delta": {"role": "assistant", "content": "Command failed: " + e.output.decode('utf-8')}, "logprobs": None, "finish_reason": None}]})
     response = app.response_class(generate(), mimetype='text/event-stream')
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
