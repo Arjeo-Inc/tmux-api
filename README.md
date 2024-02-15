@@ -8,8 +8,8 @@ This project is a simple Flask application that provides a RESTful API for execu
 
 To run this application, you need to have Docker installed on your machine. Follow the instructions below:
 
-1. Build the Docker image:
-2. Run the Docker container: 
+1. Build the Docker image: `docker build -t tmux-api .`
+2. Run the Docker container: `docker run -p 5000:5000 tmux-api`
 ## API Usage
 Once the application is running, you can send a POST request to the  endpoint with a JSON body containing the tmux command to be executed. The command should come in under the key 'command'.
 Example Curl command:
