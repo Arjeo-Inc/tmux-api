@@ -32,7 +32,7 @@ def openai_command():
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
 
-    command_str = next((msg['content'] for msg in messages if msg['role'] == 'user'), None)
+    command_str = next((msg['content'] for msg in reversed(messages) if msg['role'] == 'user'), None)
     if not command_str:
         response = jsonify({'error': 'No command specified'})
         response.status_code = 400
