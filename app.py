@@ -39,6 +39,7 @@ def openai_command():
 def get_models():
     response = jsonify({"data":[{"id":"tux","object":"model","created":1677610602,"owned_by":"openai"}],"object":"list"})
     response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add("Access-Control-Allow-Headers", "Authorization")
     return response
 
 if __name__ == '__main__':
