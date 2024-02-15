@@ -18,9 +18,21 @@ def openai_command():
     if request.method == 'OPTIONS':
         return response
 
-    data = request.json
+    data = request.get_json(force=True, silent=True)
+    if not data:
+        response = jsonify({'error': 'Invalid JSON'})
+        response.status_code = 400
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
     messages = data.get('messages')
-    command_str = [msg['content'] for msg in messages if msg['role'] == 'user'][0]
+    if not messages:
+        response = jsonify({'error': 'No messages provided'})
+        response.status_code = 400
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        return response
+
+    command_str = next((msg['content'] for msg in messages if msg['role'] == 'user'), None)
     if not command_str:
         response = jsonify({'error': 'No command specified'})
         response.status_code = 400
