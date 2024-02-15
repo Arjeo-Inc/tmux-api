@@ -1,6 +1,7 @@
 import requests
 import json
 import time
+import subprocess
 
 def test_app():
     # Launch a new tmux session in detached mode
@@ -23,4 +24,10 @@ def test_app():
     print(response.text)
 
 if __name__ == '__main__':
-    test_app()
+    # Start the Flask application in a new process
+    flask_process = subprocess.Popen(['flask', 'run'])
+    try:
+        test_app()
+    finally:
+        # Stop the Flask application
+        flask_process.terminate()
