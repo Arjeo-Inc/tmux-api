@@ -22,7 +22,8 @@ def openai_command():
     messages = data.get('messages')
     command_str = [msg['content'] for msg in messages if msg['role'] == 'user'][0]
     if not command_str:
-        response = jsonify({'error': 'No command specified'}), 400
+        response = jsonify({'error': 'No command specified'})
+        response.status_code = 400
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
 
@@ -33,7 +34,8 @@ def openai_command():
     # Ensure the command is prefixed with 'tmux' to maintain the scope of this API
     # This is a basic check and might need to be more sophisticated for real-world applications
     if not command_list or command_list[0] != 'tmux':
-        response = jsonify({'error': 'Invalid command'}), 400
+        response = jsonify({'error': 'Invalid command'})
+        response.status_code = 400
         response.headers.add("Access-Control-Allow-Origin", "*")
         return response
 
