@@ -35,9 +35,11 @@ def openai_command():
             yield 'data: {"id": "any_id", "object": "text.completion", "created": 0, "model": "gpt-3.5-turbo", "choices": [{"text": "Command failed: ' + e.output.decode('utf-8') + '", "finish_reason": "stop", "index": 0}]}\n\n'
     return app.response_class(generate(), mimetype='text/event-stream')
 
-@app.route('/v1/models', methods=['GET'])
+@app.route('/v1/models', methods=['GET', 'OPTIONS'])
 def get_models():
-    return jsonify({"data":[{"id":"tux","object":"model","created":1677610602,"owned_by":"openai"}],"object":"list"})
+    response = jsonify({"data":[{"id":"tux","object":"model","created":1677610602,"owned_by":"openai"}],"object":"list"})
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 if __name__ == '__main__':
     app.run(debug=True)
